@@ -1,5 +1,7 @@
 package re
 
+import "strings"
+
 type Bag struct {
 	ops      []Op
 	codeInfo CodeInfo
@@ -20,7 +22,7 @@ func (e *Bag) ChainWithMeta(op Op, meta Meta) Error {
 	return e
 }
 
-func (e *Bag) AsMap() map[string]interface{} {
+func (e *Bag) RawMap() map[string]interface{} {
 	return map[string]interface{}{
 		"operations": e.ops,
 		"internal":   e.internal,
@@ -28,6 +30,22 @@ func (e *Bag) AsMap() map[string]interface{} {
 		"code_info":  e.codeInfo,
 		"meta_data":  e.metaData,
 		"message":    e.message,
+	}
+}
+
+func (e *Bag) ProcessedMap() map[string]string {
+
+	operations := make([]string, len(e.ops))
+	for i := len(e.ops) - 1; i >= 0; i-- {
+		operations = append(operations, e.ops[i].String())
+	}
+
+	return map[string]string{
+		"operations": strings.Join(operations, " => "),
+		"internal":   e.internal.Error(),
+		"kind":       e.kind.String(),
+		"code_info":  e.codeInfo.String(),
+		"meta_data":  e.metaData.String(),
 	}
 }
 
