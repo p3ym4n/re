@@ -32,9 +32,10 @@ func TestBag_ChainWithMeta(t *testing.T) {
 			t.Error("the error operation is not correct")
 		}
 	}
-
 	wantMeta := Meta{
-		"this": "that",
+		"first": Meta{
+			"this": "that",
+		},
 		"third": Meta{
 			"those": "them",
 		},
