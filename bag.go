@@ -35,7 +35,7 @@ func (e *Bag) RawMap() map[string]interface{} {
 
 func (e *Bag) ProcessedMap() map[string]string {
 
-	operations := make([]string, len(e.ops))
+	operations := make([]string, 0, len(e.ops))
 	for i := len(e.ops) - 1; i >= 0; i-- {
 		operations = append(operations, e.ops[i].String())
 	}

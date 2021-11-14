@@ -77,32 +77,46 @@ func TestBag_RawMap(t *testing.T) {
 }
 
 func TestBag_ProcessedMap(t *testing.T) {
-	bag := New("first", errors.New("first err"), Meta{"this": "that"})
-	processedMap := bag.ProcessedMap()
 
-	if bag.kind.String() != processedMap["kind"] {
-		t.Errorf("wrong kind for the bag")
-	}
-	if bag.internal.Error() != processedMap["internal"] {
-		t.Errorf("wrong internal for the bag")
-	}
+	t.Run("single depth", func(t *testing.T) {
+		bag := New("first", errors.New("first err"), Meta{"this": "that"})
+		processedMap := bag.ProcessedMap()
 
-	operations := make([]string, len(bag.ops))
-	for i := len(bag.ops) - 1; i >= 0; i-- {
-		operations = append(operations, bag.ops[i].String())
-	}
+		if bag.kind.String() != processedMap["kind"] {
+			t.Errorf("wrong kind for the bag")
+		}
+		if bag.internal.Error() != processedMap["internal"] {
+			t.Errorf("wrong internal for the bag")
+		}
 
-	if processedMap["operations"] != strings.Join(operations, " => ") {
-		t.Errorf("wrong ops for the bag")
-	}
-	marshalled, err := json.Marshal(bag.metaData)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if string(marshalled) != processedMap["meta_data"] {
-		t.Errorf("wrong meta_data for the bag")
-	}
-	if processedMap["code_info"] == "" {
-		t.Errorf("wrong codeInfo value for the bag")
-	}
+		operations := make([]string, len(bag.ops))
+		for i := len(bag.ops) - 1; i >= 0; i-- {
+			operations = append(operations, bag.ops[i].String())
+		}
+
+		if processedMap["operations"] != strings.Join(operations, " => ") {
+			t.Errorf("wrong ops for the bag")
+		}
+		marshalled, err := json.Marshal(bag.metaData)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if string(marshalled) != processedMap["meta_data"] {
+			t.Errorf("wrong meta_data for the bag")
+		}
+		if processedMap["code_info"] == "" {
+			t.Errorf("wrong codeInfo value for the bag")
+		}
+	})
+
+	t.Run("multi depth operations check", func(t *testing.T) {
+		bag := New("first", errors.New("first err"), Meta{"this": "that"})
+		bag.Chain("the second level")
+		bag.Chain("the third")
+		processedMap := bag.ProcessedMap()
+		if processedMap["operations"] != "the third => the second level => first" {
+			t.Errorf("wrong ops for the bag, got %s", processedMap["operations"])
+		}
+	})
+
 }
