@@ -89,7 +89,7 @@ func TestBag_ProcessedMap(t *testing.T) {
 			t.Errorf("wrong internal for the bag")
 		}
 
-		operations := make([]string, len(bag.ops))
+		operations := make([]string, 0, len(bag.ops))
 		for i := len(bag.ops) - 1; i >= 0; i-- {
 			operations = append(operations, bag.ops[i].String())
 		}
