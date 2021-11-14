@@ -53,6 +53,10 @@ func (e *Bag) Kind() Kind {
 	return e.kind
 }
 
+func (e *Bag) Internal() error {
+	return e.internal
+}
+
 func (e *Bag) Message() string {
 	return e.message
 }
