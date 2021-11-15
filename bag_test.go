@@ -63,11 +63,10 @@ func TestBag_RawMap(t *testing.T) {
 		t.Errorf("wrong ops for the bag")
 	}
 	gotMeta := mapped["meta_data"].(Meta)
-	for k, v := range bag.metaData {
-		if gotMeta[k] != v {
-			t.Errorf("wrong metaData value for the bag")
-		}
+	if !reflect.DeepEqual(gotMeta, bag.metaData) {
+		t.Errorf("wrong metaData value for the bag")
 	}
+
 	cf, ok := mapped["code_info"].(CodeInfo)
 	if !ok {
 		t.Errorf("wrong codeInfo value for the bag")

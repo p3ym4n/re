@@ -33,12 +33,13 @@ func New(op Op, internal error, args ...interface{}) *Bag {
 		case Kind:
 			e.kind = typedArg
 		case Meta:
-			if len(e.metaData) == 0 {
-				e.metaData = typedArg
-			} else {
+			if currentMeta, has := e.metaData[op.String()].(map[string]interface{}); has {
 				for k, v := range typedArg {
-					e.metaData[k] = v
+					currentMeta[k] = v
 				}
+				e.metaData[op.String()] = currentMeta
+			} else {
+				e.metaData = map[string]interface{}{op.String(): typedArg}
 			}
 		}
 	}

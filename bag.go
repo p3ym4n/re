@@ -18,11 +18,7 @@ func (e *Bag) Chain(op Op) Error {
 
 func (e *Bag) ChainWithMeta(op Op, meta Meta) Error {
 	e.ops = append(e.ops, op)
-	currentMeta := e.metaData
-	e.metaData = map[string]interface{}{
-		e.ops[0].String(): currentMeta,
-		op.String():       meta,
-	}
+	e.metaData[op.String()] = meta
 	return e
 }
 
