@@ -18,6 +18,9 @@ func (e *Bag) Chain(op Op) Error {
 
 func (e *Bag) ChainWithMeta(op Op, meta Meta) Error {
 	e.ops = append(e.ops, op)
+	if e.metaData == nil {
+		e.metaData = make(Meta)
+	}
 	e.metaData[op.String()] = meta
 	return e
 }
